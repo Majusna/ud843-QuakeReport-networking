@@ -49,9 +49,15 @@ public final class QueryUtils {
 
     //2. salje zahtev za konekciju ,ulazni parametar je url, vraca string
 
-    private String makeHttpRequest (URL url)throws IOException {
+    private static String makeHttpRequest (URL url)throws IOException {
 
         String jsonResponse = "";
+
+        // If the URL is null, then return early.
+        if (url == null) {
+            return jsonResponse;
+
+        }
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;
 
@@ -63,10 +69,12 @@ public final class QueryUtils {
             urlConnection.connect();
 
             // if the request was successful ,then read the input stream and parse the response
-            if (urlConnection.getResponseCode() == 200 ){
+            if (urlConnection.getResponseCode() == 200) {
                 inputStream = urlConnection.getInputStream();
-                jsonResponse = readFromStream(inputStream);}
-
+                jsonResponse = readFromStream(inputStream);
+            } else {
+                Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
+            }
 
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
@@ -89,7 +97,7 @@ public final class QueryUtils {
     // 3 - procitaj inputStream podatke pomocu InputStreamReader i BufferedReader
     //prvedi sve u string
 
-    private String readFromStream(InputStream inputStream) throws IOException {
+    private static String readFromStream(InputStream inputStream) throws IOException {
         StringBuilder output = new StringBuilder();
         if (inputStream != null) {
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
