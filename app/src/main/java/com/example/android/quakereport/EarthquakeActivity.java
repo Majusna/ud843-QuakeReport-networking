@@ -30,6 +30,14 @@ import java.util.List;
 
 public class EarthquakeActivity extends AppCompatActivity {
 
+    //When we get to the onPostExecute() method, we need to update the ListView.
+    // The only way to update the contents of the list is to update the data set within the EarthquakeAdapter.
+    // To access and modify the instance of the EarthquakeAdapter,
+    // we need to make it a global variable in the EarthquakeActivity.
+    /** Adapter for the list of earthquakes */
+    private EarthquakeAdapter mAdapter;
+
+    //Then we update all references to the adapter to use the mAdapter variable name.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
