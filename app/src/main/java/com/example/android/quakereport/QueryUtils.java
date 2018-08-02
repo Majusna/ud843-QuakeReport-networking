@@ -38,13 +38,12 @@ public final class QueryUtils {
     // 1.kreiranje url objekta : url = new URL(stringUrl);
     //url klasa - pokazivac resursa na www, input je string "https://..."
 
-    private static URL createURL (String stringUrl){
+    private static URL createUrl(String stringUrl) {
         URL url = null;
         try {
             url = new URL(stringUrl);
-        } catch (MalformedURLException exception) {
-            Log.e(LOG_TAG, "Error with creating URL", exception);
-            return null;
+        } catch (MalformedURLException e) {
+            Log.e(LOG_TAG, "Problem building the URL ", e);
         }
         return url;
     }
@@ -170,7 +169,7 @@ public final class QueryUtils {
                 }
 
 
-                
+
         } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
@@ -182,6 +181,31 @@ public final class QueryUtils {
         return earthquakes;
     }
 
+    //Add in the fetchEarthquakeData() helper method that ties all the steps together
+    // - creating a URL, sending the request, processing the response.
+    // Since this is the only “public” QueryUtils method that the EarthquakeAsyncTask needs to interact with,
+    // make all other helper methods in QueryUtils “private”.
 
+    /**
+     * Query the USGS dataset and return a list of {@link Earthquake} objects.
+     */
+    public static List<Earthquake> fetchEarthquakeData(String requestUrl) {
+        // Create URL object
+        URL url = createUrl(requestUrl);
+
+        // Perform HTTP request to the URL and receive a JSON response back
+        String jsonResponse = null;
+        try {
+            jsonResponse = makeHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problem making the HTTP request.", e);
+        }
+
+        // Extract relevant fields from the JSON response and create a list of {@link Earthquake}s
+        List<Earthquake> earthquakes = extractFeatureFromJson(jsonResponse);
+
+        // Return the list of {@link Earthquake}s
+        return earthquakes;
+    }
 
 }
