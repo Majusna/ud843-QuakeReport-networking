@@ -95,7 +95,7 @@ public final class QueryUtils {
         }
 
     // 3 - procitaj inputStream podatke pomocu InputStreamReader i BufferedReader
-    //prvedi sve u string
+    //prvedi sve u string, koji sadrzi ceo json odgovor sa servera
 
     private static String readFromStream(InputStream inputStream) throws IOException {
         StringBuilder output = new StringBuilder();
