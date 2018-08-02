@@ -6,6 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -39,6 +42,46 @@ public final class QueryUtils {
         return url;
     }
 
+    //2. salje zahtev za konekciju ,ulazni parametar je url, vraca string
+
+    private String makeHttpRequest (URL url)throws IOException {
+
+        String jsonResponse = "";
+        HttpURLConnection urlConnection = null;
+        InputStream inputStream = null;
+
+        try {
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setReadTimeout(10000 /* milliseconds */);
+            urlConnection.setConnectTimeout(15000 /* milliseconds */);
+            urlConnection.connect();
+
+            // if the request was successful ,then read the input stream and parse the response
+            if (urlConnection.getResponseCode() == 200 ){
+                inputStream = urlConnection.getInputStream();
+                jsonResponse = readFromStream(inputStream);}
+
+
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
+
+        } finally {
+            //if the url is null, we shouldn’t try to make the HTTP request
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            //if the JSON response is null or empty string, we shouldn’t try to continue with parsing it
+            if (inputStream != null) {
+                // function must handle java.io.IOException here
+                inputStream.close();
+            }
+        }
+        return jsonResponse;
+
+
+        }
+        
 
     /**
      * Return a list of {@link Earthquake} objects that has been built up from
