@@ -26,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EarthquakeActivity extends AppCompatActivity {
 
@@ -69,40 +70,17 @@ public class EarthquakeActivity extends AppCompatActivity {
 
     }
 
-    private class EarthquakeAsyncTask extends AsyncTask<String, Void, Earthquake> {
+    private class EarthquakeAsyncTask extends AsyncTask<String, Void, List<Earthquake>> {
 
-        /**
-         * This method is invoked (or called) on a background thread, so we can perform
-         * long-running operations like making a network request.
-         *
-         * It is NOT okay to update the UI from a background thread, so we just return an
-         * {@link Earthquake} object as the result.
-         */
-        protected Earthquake doInBackground(String... urls) {
-            // Don't perform the request if there are no URLs, or the first URL is null.
-            if (urls.length < 1 || urls[0] == null) {
-                return null;
-            }
-            Earthquake result = QueryUtils.fetchEarthquakeData(urls[0]);
-            return result;
+        @Override
+        protected List<Earthquake> doInBackground(String... urls) {
+
         }
 
-        /**
-         * This method is invoked on the main UI thread after the background work has been
-         * completed.
-         *
-         * It IS okay to modify the UI within this method. We take the {@link Earthquake} object
-         * (which was returned from the doInBackground() method) and update the views on the screen.
-         */
-        protected void onPostExecute(Earthquake result) {
-            // If there is no result, do nothing.
-            if (result == null) {
-                return;
-            }
-            updateUi(result);
+        @Override
+        protected void onPostExecute(List<Earthquake> data) {
+
         }
-
-
     }
 
 
