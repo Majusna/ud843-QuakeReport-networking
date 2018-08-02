@@ -25,8 +25,8 @@ public final class QueryUtils {
      */
     private QueryUtils() {
     }
-
-    // 1.kreiranje url objekta : url = new URL(stringUrl);, stringUrl = String SAMPLE_JSON_RESPONSE
+    // 1.kreiranje url objekta : url = new URL(stringUrl);
+    //url klasa - pokazivac resursa na www, input je string "https://..."
 
     private URL createURL (String stringUrl){
         URL url = null;
@@ -38,8 +38,6 @@ public final class QueryUtils {
         }
         return url;
     }
-
-
 
 
     /**
