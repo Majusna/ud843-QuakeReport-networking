@@ -36,7 +36,7 @@ public final class QueryUtils {
     // 1.kreiranje url objekta : url = new URL(stringUrl);
     //url klasa - pokazivac resursa na www, input je string "https://..."
 
-    private URL createURL (String stringUrl){
+    private static URL createURL (String stringUrl){
         URL url = null;
         try {
             url = new URL(stringUrl);
