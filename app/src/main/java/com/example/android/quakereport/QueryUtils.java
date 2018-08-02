@@ -1,5 +1,6 @@
 package com.example.android.quakereport;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -15,6 +16,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Helper methods related to requesting and receiving earthquake data from USGS.
@@ -118,10 +120,17 @@ public final class QueryUtils {
      * Return a list of {@link Earthquake} objects that has been built up from
      * parsing a JSON response.
      */
-    public static ArrayList<Earthquake> extractEarthquakes(String earthquakeJSON) {
 
-        // Create an empty ArrayList that we can start adding earthquakes to
-        ArrayList<Earthquake> earthquakes = new ArrayList<>();
+    private static List<Earthquake> extractFeatureFromJson(String earthquakeJSON) {
+
+        // If the JSON string is empty or null, then return early.
+        if (TextUtils.isEmpty(earthquakeJSON)) {
+            return null;
+        }
+
+
+        // Create an empty List that we can start adding earthquakes to
+        List<Earthquake> earthquakes = new ArrayList<>();
 
         // Try to parse the SAMPLE_JSON_RESPONSE. If there's a problem with the way the JSON
         // is formatted, a JSONException exception object will be thrown.
@@ -137,10 +146,7 @@ public final class QueryUtils {
             //Extract “features” JSONArray
             JSONArray earthquakeArray = baseJsonResponse.getJSONArray("features");
 
-            if (earthquakeArray.length() > 0) {
-
-
-                //Loop through each feature in the array
+            //Loop through each feature in the array
                 for (int i=0 ; i<earthquakeArray.length(); i++){
                     //Get earthquake JSONObject at position i
                     JSONObject baseJsonOb = earthquakeArray.getJSONObject(i);
@@ -164,10 +170,7 @@ public final class QueryUtils {
                 }
 
 
-            }
-
-
-
+                
         } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
