@@ -23,10 +23,8 @@ import java.util.List;
  */
 public final class QueryUtils {
 
-    /** Sample JSON response for a USGS query */
-    /** URL for earthquake data from the USGS dataset */
-    private static final String USGS_REQUEST_URL =
-            "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&minmag=6&limit=10";
+
+
     public static final String LOG_TAG = EarthquakeActivity.class.getSimpleName();
     /**
      * Create a private constructor because no one should ever create a {@link QueryUtils} object.
@@ -50,50 +48,46 @@ public final class QueryUtils {
 
     //2. salje zahtev za konekciju ,ulazni parametar je url, vraca string
 
-    private static String makeHttpRequest (URL url)throws IOException {
-
+    private static String makeHttpRequest(URL url) throws IOException {
         String jsonResponse = "";
 
         // If the URL is null, then return early.
         if (url == null) {
             return jsonResponse;
-
         }
+
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;
-
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
             urlConnection.setReadTimeout(10000 /* milliseconds */);
             urlConnection.setConnectTimeout(15000 /* milliseconds */);
+            urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
-            // if the request was successful ,then read the input stream and parse the response
+            // If the request was successful (response code 200),
+            // then read the input stream and parse the response.
             if (urlConnection.getResponseCode() == 200) {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
             } else {
                 Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
             }
-
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
-
+            Log.e(LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
         } finally {
-            //if the url is null, we shouldn’t try to make the HTTP request
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
-            //if the JSON response is null or empty string, we shouldn’t try to continue with parsing it
             if (inputStream != null) {
-                // function must handle java.io.IOException here
+                // Closing the input stream could throw an IOException, which is why
+                // the makeHttpRequest(URL url) method signature specifies than an IOException
+                // could be thrown.
                 inputStream.close();
             }
         }
         return jsonResponse;
-
-        }
+    }
 
     // 3 - procitaj inputStream podatke pomocu InputStreamReader i BufferedReader
     //prvedi sve u string, koji sadrzi ceo json odgovor sa servera

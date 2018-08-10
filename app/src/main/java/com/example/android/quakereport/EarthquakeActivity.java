@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,12 +38,19 @@ public class EarthquakeActivity extends AppCompatActivity {
     /** Adapter for the list of earthquakes */
     private EarthquakeAdapter mAdapter;
 
+    /* Sample JSON response for a USGS query
+    URL for earthquake data from the USGS dataset */
+    private static final String USGS_REQUEST_URL =
+            "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&minmag=6&limit=10";
+
     //Then we update all references to the adapter to use the mAdapter variable name.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
+
+
 
      // Find a reference to the {@link ListView} in the layout
         ListView earthquakeListView = (ListView) findViewById(R.id.list);
@@ -51,6 +59,11 @@ public class EarthquakeActivity extends AppCompatActivity {
         mAdapter = new EarthquakeAdapter(this, new ArrayList<Earthquake>());
 
         earthquakeListView.setAdapter(mAdapter);
+
+        // Start the AsyncTask to fetch the earthquake data
+        EarthquakeAsyncTask task = new EarthquakeAsyncTask();
+        task.execute(USGS_REQUEST_URL);
+
 
         // Set an item click listener on the ListView, which sends an intent to a web browser
         // to open a website with more information about the selected earthquake.
@@ -73,6 +86,7 @@ public class EarthquakeActivity extends AppCompatActivity {
 
 
     }
+
 
     /**
      * {@link AsyncTask} to perform the network request on a background thread, and then
