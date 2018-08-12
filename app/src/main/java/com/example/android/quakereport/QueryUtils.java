@@ -24,7 +24,6 @@ import java.util.List;
 public final class QueryUtils {
 
 
-
     public static final String LOG_TAG = EarthquakeActivity.class.getSimpleName();
     /**
      * Create a private constructor because no one should ever create a {@link QueryUtils} object.
@@ -35,6 +34,8 @@ public final class QueryUtils {
     }
     // 1.kreiranje url objekta : url = new URL(stringUrl);
     //url klasa - pokazivac resursa na www, input je string "https://..."
+
+
 
     private static URL createUrl(String stringUrl) {
         URL url = null;
@@ -184,6 +185,8 @@ public final class QueryUtils {
      * Query the USGS dataset and return a list of {@link Earthquake} objects.
      */
     public static List<Earthquake> fetchEarthquakeData(String requestUrl) {
+
+        Log.i("QueryUtils","TEST: fetchData- create url,make stream,separate in json, - return earthquakes" );
         // Create URL object
         URL url = createUrl(requestUrl);
 
@@ -192,11 +195,12 @@ public final class QueryUtils {
         try {
             jsonResponse = makeHttpRequest(url);
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem making the HTTP request.", e);
+            Log.i(LOG_TAG, "TEST: Problem making the HTTP request.", e);
         }
 
         // Extract relevant fields from the JSON response and create a list of {@link Earthquake}s
         List<Earthquake> earthquakes = extractFeatureFromJson(jsonResponse);
+
 
         // Return the list of {@link Earthquake}s
         return earthquakes;
